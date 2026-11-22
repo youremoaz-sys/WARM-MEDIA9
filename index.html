@@ -1,0 +1,97 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="description" content="Warm Media — منصة الأخبار والمجتمع">
+  <meta name="theme-color" content="#101827">
+  <title>Warm Media | منصة الإعلام والمجتمع</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script defer src="script.js"></script>
+</head>
+<body>
+<header class="topbar">
+  <a class="brand" href="#" data-page="home"><span class="brand-mark">W</span><span>WARM <b>MEDIA</b></span></a>
+  <nav class="main-nav" aria-label="التنقل">
+    <button data-page="home" class="nav-link active" data-i18n="home">الرئيسية</button>
+    <button data-page="news" class="nav-link" data-i18n="news">الأخبار</button>
+    <button data-page="chat" class="nav-link" data-i18n="chat">المجتمع</button>
+  </nav>
+  <div class="top-actions">
+    <button id="languageBtn" class="icon-btn" aria-label="Change language">EN</button>
+    <button id="themeBtn" class="icon-btn" aria-label="Toggle theme">☼</button>
+    <button id="loginOpen" class="btn btn-outline" data-i18n="login">دخول</button>
+    <button id="signupOpen" class="btn btn-primary" data-i18n="join">إنشاء حساب</button>
+    <button id="profileBtn" class="avatar hidden" title="الملف الشخصي">W</button>
+    <button id="logoutBtn" class="btn btn-outline hidden" data-i18n="logout">خروج</button>
+  </div>
+</header>
+
+<main>
+<section id="homePage" class="page active">
+  <nav id="categoryRail" class="category-rail wrap" aria-label="تصنيفات الأخبار"></nav>
+  <div class="hero wrap">
+    <div class="hero-copy">
+      <span class="eyebrow"><i></i><span data-i18n="heroTag">نبض العالم… وصوت المجتمع</span></span>
+      <h1 data-i18n="heroTitle">الأخبار تجمعنا،<br><em>والحوار يقربنا.</em></h1>
+      <p data-i18n="heroText">تابع آخر المستجدات، اقرأ بوعي، وشارك مجتمعًا يحترم اختلاف الآراء.</p>
+      <div class="hero-actions"><button class="btn btn-primary btn-large" data-page="news" data-i18n="exploreNews">استكشف الأخبار</button><button class="btn btn-glass btn-large" data-page="chat" data-i18n="joinChat">ادخل المجتمع</button></div>
+      <div class="hero-stats"><div><b id="statNews">—</b><span data-i18n="publishedNews">خبر منشور</span></div><div><b id="statMembers">—</b><span data-i18n="members">عضو بالمجتمع</span></div><div><b>24/7</b><span data-i18n="conversation">حوار مستمر</span></div></div>
+    </div>
+    <div class="hero-art"><div class="orb orb-one"></div><div class="orb orb-two"></div><div class="hero-panel"><span class="live-dot"></span> WARM / LIVE<div class="panel-lines"><i></i><i></i><i></i></div><div class="panel-bottom"><b>W</b><span>Stories that matter.</span></div></div><div class="floating-chip chip-top">✦ <span data-i18n="trustedContent">محتوى يستحق وقتك</span></div><div class="floating-chip chip-bottom">◉ REALTIME COMMUNITY</div></div>
+  </div>
+  <section class="wrap section-block"><div class="section-head"><div><span class="eyebrow">01 / EDITOR'S PICK</span><h2 data-i18n="latestNews">أحدث الأخبار</h2></div><button class="text-link" data-page="news" data-i18n="viewAll">عرض الكل ←</button></div><div id="homeNews" class="news-grid"><div class="empty-state">حمّل إعدادات Supabase لعرض الأخبار المنشورة.</div></div></section>
+  <aside id="homeAd" class="ad-slot wrap" aria-label="مساحة إعلانية"></aside>
+  <section class="wrap section-block"><div class="section-head"><div><span class="eyebrow">COMMUNITY / POSTS</span><h2>منشورات المجتمع والإدارة</h2></div></div><div id="homePosts" class="post-grid"><div class="empty-state">لا توجد منشورات بعد.</div></div></section>
+  <section class="community-strip wrap"><div><span class="eyebrow">02 / COMMUNITY</span><h2 data-i18n="communityTitle">مساحة للنقاش البنّاء</h2><p data-i18n="communityText">شارك رأيك وتابع الحوار في غرفة المجتمع العامة.</p></div><button class="btn btn-primary" data-page="chat" data-i18n="enterRoom">دخول غرفة الدردشة</button></section>
+</section>
+
+<section id="newsPage" class="page wrap">
+  <div class="page-heading"><div><span class="eyebrow">WARM / JOURNAL</span><h1 data-i18n="newsTitle">الأخبار والتقارير</h1><p data-i18n="newsSubtitle">مصدر واحد لمتابعة أهم القصص.</p></div><div class="filter-row"><input id="newsSearch" type="search" placeholder="ابحث في الأخبار…" aria-label="Search news"><select id="categoryFilter"><option value="">كل التصنيفات</option></select></div></div>
+  <div id="newsGrid" class="news-grid"><div class="empty-state">لا توجد أخبار معروضة حاليًا.</div></div>
+  <div id="newsDetail" class="article-view hidden"></div>
+</section>
+
+<section id="chatPage" class="page wrap">
+  <div class="page-heading"><div><span class="eyebrow">WARM / COMMUNITY</span><h1 data-i18n="publicRoom">غرفة المجتمع العامة</h1><p data-i18n="chatRules">حوار محترم، بلا إساءة أو معلومات شخصية حساسة.</p></div><span class="online-pill"><i></i><span data-i18n="communityRoom">المجتمع العام</span></span></div>
+  <div class="chat-shell">
+    <div class="chat-top"><div class="room-icon">✦</div><div><b data-i18n="publicRoom">غرفة المجتمع العامة</b><small id="chatStatus">اتصل بإعدادات Supabase لتفعيل الدردشة الفورية</small></div><span class="push-right">● <span data-i18n="live">مباشر</span></span></div>
+    <div id="chatMessages" class="chat-messages"><div class="empty-state">سجّل الدخول وابدأ المشاركة في الحوار.</div></div>
+    <form id="chatForm" class="chat-compose"><input id="chatInput" maxlength="1500" placeholder="اكتب رسالة للمجتمع…" autocomplete="off"><button class="btn btn-primary" type="submit" data-i18n="send">إرسال</button></form>
+    <p class="fine-print" data-i18n="chatLoginHint">المشاركة متاحة للأعضاء المسجلين فقط. قد تخضع الرسائل للمراجعة.</p>
+  </div>
+</section>
+
+<section id="profilePage" class="page wrap">
+ <div class="page-heading"><div><span class="eyebrow">WARM / ACCOUNT</span><h1 data-i18n="myProfile">ملفي الشخصي</h1></div></div>
+ <form id="profileForm" class="form-card narrow">
+  <label data-i18n="displayName">الاسم الظاهر</label><input id="profileName" maxlength="60" required>
+  <label>الاسم المستعار في التعليقات</label><input id="profileAnonymousName" maxlength="40" placeholder="قارئ">
+  <label data-i18n="avatarUrl">رابط الصورة (اختياري)</label><input id="profileAvatar" type="url" placeholder="https://…">
+  <div class="profile-badge-row"><button id="rewardBadgeBtn" type="button" class="btn btn-outline">مطالبة شارة المكافأة</button><span id="profileBadgeStatus" class="role-pill">لا توجد شارة</span></div>
+  <label class="terms-check"><input id="notificationNews" type="checkbox" checked> إشعارات الأخبار الجديدة</label>
+  <label class="terms-check"><input id="notificationComments" type="checkbox" checked> إشعارات التعليقات</label>
+  <button id="enablePushBtn" type="button" class="btn btn-glass-dark">تفعيل إشعارات المتصفح</button>
+  <button class="btn btn-primary" type="submit" data-i18n="save">حفظ التغييرات</button>
+ </form>
+</section>
+
+<section id="adminPage" class="page wrap">
+ <div class="page-heading"><div><span class="eyebrow">WARM / CONTROL</span><h1>لوحة الإدارة</h1><p>إدارة المحتوى والإشراف — الصلاحيات تُفرض من قاعدة البيانات.</p></div><span id="adminRole" class="role-pill">—</span></div>
+ <div class="admin-stats" id="adminStats"></div>
+ <div class="admin-layout">
+  <form id="newsForm" class="form-card"><h3>إضافة / تعديل خبر</h3><input type="hidden" id="editNewsId"><label>العنوان</label><input id="newsTitleInput" required maxlength="180"><label>الوصف المختصر</label><textarea id="newsExcerptInput" rows="2" maxlength="300"></textarea><label>المحتوى</label><textarea id="newsBodyInput" rows="7" required></textarea><label>رابط الصورة</label><input id="newsImageInput" type="url"><label>التصنيف</label><select id="newsCategoryInput"></select><div class="check-row"><label><input id="newsBreakingInput" type="checkbox"> خبر عاجل</label><label><input id="newsPinnedInput" type="checkbox"> تثبيت</label><label><input id="newsPublishedInput" type="checkbox"> نشر الآن</label></div><button class="btn btn-primary" type="submit">حفظ الخبر</button></form>
+  <div class="form-card"><h3>إدارة الأخبار</h3><div id="adminNewsList" class="admin-list"></div><hr><h3>البلاغات الأخيرة</h3><div id="adminReports" class="admin-list"></div></div>
+ </div>
+</section>
+</main>
+
+<footer class="footer"><div class="brand"><span class="brand-mark">W</span><span>WARM <b>MEDIA</b></span></div><span>© <span id="year"></span> Warm Media. <span data-i18n="rights">جميع الحقوق محفوظة.</span></span><div><a href="#" id="termsLink">الشروط</a><a href="#" id="privacyLink">الخصوصية</a></div></footer>
+
+<div id="authModal" class="modal hidden" role="dialog" aria-modal="true" aria-labelledby="authTitle"><div class="modal-backdrop" data-close="authModal"></div><div class="modal-card"><button class="modal-close" data-close="authModal" aria-label="إغلاق">×</button><span class="eyebrow">WARM / ACCOUNT</span><h2 id="authTitle">مرحبًا بك</h2><div class="auth-tabs"><button id="showLogin" class="active">دخول</button><button id="showSignup">إنشاء حساب</button></div>
+<form id="loginForm"><label>البريد الإلكتروني</label><input id="loginEmail" type="email" autocomplete="email" required><label>كلمة المرور</label><input id="loginPassword" type="password" autocomplete="current-password" required minlength="8"><button class="btn btn-primary full" type="submit">تسجيل الدخول</button></form>
+<form id="signupForm" class="hidden"><label>الاسم</label><input id="signupName" required maxlength="60"><label>البريد الإلكتروني</label><input id="signupEmail" type="email" autocomplete="email" required><label>كلمة المرور</label><input id="signupPassword" type="password" autocomplete="new-password" minlength="10" required><label>تأكيد كلمة المرور</label><input id="signupConfirm" type="password" minlength="10" required><label>نوع الصورة الافتراضية</label><select id="signupAvatar"><option value="default_a">Avatar A</option><option value="default_b">Avatar B</option></select><label class="terms-check"><input id="acceptTerms" type="checkbox" required> أوافق على شروط الاستخدام وسياسة الخصوصية.</label><button class="btn btn-primary full" type="submit">إنشاء الحساب</button></form><p id="authMessage" class="form-message" role="status"></p></div></div>
+<div id="toast" class="toast" role="status"></div>
+</body></html>

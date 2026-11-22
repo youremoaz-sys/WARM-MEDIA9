@@ -1,0 +1,20 @@
+// Run ONCE from a trusted machine. Never expose the service role key in browser code.
+import { createClient } from '@supabase/supabase-js';
+import readline from 'node:readline/promises';
+import { stdin as input, stdout as output } from 'node:process';
+const rl=readline.createInterface({input,output});
+const url=process.env.SUPABASE_URL;
+const key=process.env.SUPABASE_SERVICE_ROLE_KEY;
+if(!url||!key) throw new Error('Set SUPABASE_URL and SUPABASE_SERVICE_ROLE_KEY in your shell environment.');
+const email=(await rl.question('Existing confirmed account email: ')).trim().toLowerCase();rl.close();
+const admin=createClient(url,key,{auth:{persistSession:false}});
+const {data,error}=await admin.auth.admin.listUsers({page:1,perPage:1000});
+if(error)throw error;
+const target=data.users.find(u=>u.email?.toLowerCase()===email);
+if(!target)throw new Error('User not found. Create and confirm the account first.');
+const {data:role,error:roleErr}=await admin.from('roles').select('id').eq('name','super_admin').single();
+if(roleErr)throw roleErr;
+const {error:grantErr}=await admin.from('user_roles').upsert({user_id:target.id,role_id:role.id},{onConflict:'user_id,role_id'});
+if(grantErr)throw grantErr;
+await admin.from('admin_audit_logs').insert({actor_id:target.id,action:'bootstrap_super_admin',target_type:'user',target_id:target.id,details:{email}});
+console.log(`Granted super_admin to ${email}. Remove service-role credentials from the shell after use.`);
